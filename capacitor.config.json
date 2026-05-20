@@ -1,0 +1,6 @@
+{
+  "appId": "com.khidmatai.app",
+  "appName": "KhidmatAI",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
