@@ -57,7 +57,7 @@ AGENT PIPELINE:
 
 AGENT 1 — Intent Agent:
 Parse the user's input (even if misspelled or mixed language) and extract:
-- service_type: one of (AC repair / Plumbing / Electrical / Carpentry / Painting / Cleaning / Gas / CCTV / Other)
+- service_type: one of (AC repair / Plumbing / Electrical / Carpentry / Painting / Cleaning / Gas / CCTV / Tutor / Beautician / Other)
 - location: exact city, town, or hyper-local area name extracted from input (e.g., if user says "Gojra", use "Gojra").
 - time_preference: today / tomorrow morning / tomorrow afternoon / this week / urgent / flexible
 - urgency: same_day (if today or urgent) OR next_day (if tomorrow or later)

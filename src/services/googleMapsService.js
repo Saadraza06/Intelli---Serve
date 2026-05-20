@@ -122,29 +122,29 @@ export const searchNearbyProviders = async (lat, lng, serviceType) => {
 
     // Map serviceType to Places (New) includedTypes
     const normalised = serviceType.toLowerCase();
-    let includedTypes = ['plumber']; // default fallback
+    let includedTypes = null; // Default to null to trigger high-precision text search if no specific category matches
 
-    if (normalised.includes('ac') || normalised.includes('hvac') || normalised.includes('air condition')) {
+    if (normalised.includes('ac') || normalised.includes('hvac') || normalised.includes('air condition') || normalised.includes('airconditioner') || normalised.includes('split') || normalised.includes('inverter') || normalised.includes('fridge') || normalised.includes('refrigerator') || normalised.includes('cooling')) {
       includedTypes = ['electrician'];
-    } else if (normalised.includes('electric') || normalised.includes('bijli') || normalised.includes('wiring')) {
+    } else if (normalised.includes('electric') || normalised.includes('bijli') || normalised.includes('wiring') || normalised.includes('fan') || normalised.includes('board') || normalised.includes('ups') || normalised.includes('generator')) {
       includedTypes = ['electrician'];
-    } else if (normalised.includes('paint') || normalised.includes('rang')) {
+    } else if (normalised.includes('paint') || normalised.includes('rang') || normalised.includes('painter') || normalised.includes('color') || normalised.includes('wall')) {
       includedTypes = ['painter'];
-    } else if (normalised.includes('clean') || normalised.includes('safai') || normalised.includes('sweep')) {
+    } else if (normalised.includes('clean') || normalised.includes('safai') || normalised.includes('sweep') || normalised.includes('washing') || normalised.includes('janitor')) {
       includedTypes = ['house_cleaning_service'];
-    } else if (normalised.includes('carpenter') || normalised.includes('wood') || normalised.includes('furniture') || normalised.includes('lakri')) {
+    } else if (normalised.includes('carpenter') || normalised.includes('wood') || normalised.includes('furniture') || normalised.includes('lakri') || normalised.includes('door') || normalised.includes('sofa') || normalised.includes('bed')) {
       includedTypes = ['general_contractor'];
-    } else if (normalised.includes('beauty') || normalised.includes('beautician') || normalised.includes('salon') || normalised.includes('parlour') || normalised.includes('parlor') || normalised.includes('makeup') || normalised.includes('mehndi') || normalised.includes('wax')) {
+    } else if (normalised.includes('beauty') || normalised.includes('beautician') || normalised.includes('beautition') || normalised.includes('salon') || normalised.includes('parlour') || normalised.includes('parlor') || normalised.includes('makeup') || normalised.includes('mehndi') || normalised.includes('wax') || normalised.includes('hair') || normalised.includes('facial') || normalised.includes('haircut')) {
       includedTypes = ['beauty_salon'];
-    } else if (normalised.includes('tutor') || normalised.includes('teacher') || normalised.includes('ustaz') || normalised.includes('padhai') || normalised.includes('coaching') || normalised.includes('math') || normalised.includes('english') || normalised.includes('science') || normalised.includes('academy') || normalised.includes('school') || normalised.includes('institute') || normalised.includes('education')) {
+    } else if (normalised.includes('tutor') || normalised.includes('teacher') || normalised.includes('ustaz') || normalised.includes('padhai') || normalised.includes('coaching') || normalised.includes('math') || normalised.includes('english') || normalised.includes('science') || normalised.includes('academy') || normalised.includes('school') || normalised.includes('institute') || normalised.includes('education') || normalised.includes('tuition')) {
       // Education searches work better with text search than strict category
       // Return a special marker to use text search directly
       includedTypes = null;
-    } else if (normalised.includes('gas') || normalised.includes('geyser') || normalised.includes('cylinder')) {
+    } else if (normalised.includes('gas') || normalised.includes('geyser') || normalised.includes('cylinder') || normalised.includes('heater')) {
       includedTypes = ['plumber'];
     } else if (normalised.includes('cctv') || normalised.includes('camera') || normalised.includes('security') || normalised.includes('alarm')) {
       includedTypes = ['electrician'];
-    } else if (normalised.includes('plumb') || normalised.includes('nal') || normalised.includes('pipe') || normalised.includes('drain') || normalised.includes('leakage')) {
+    } else if (normalised.includes('plumb') || normalised.includes('nal') || normalised.includes('pipe') || normalised.includes('drain') || normalised.includes('leakage') || normalised.includes('tap') || normalised.includes('water') || normalised.includes('sewage')) {
       includedTypes = ['plumber'];
     } else if (normalised.includes('maid') || normalised.includes('khaana') || normalised.includes('cook') || normalised.includes('bawarchi') || normalised.includes('chef')) {
       includedTypes = ['house_cleaning_service'];

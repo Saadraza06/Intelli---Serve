@@ -46,7 +46,7 @@ export const callGeminiAPI = async (systemInstruction, userPrompt, useJSON = tru
 const INTENT_PROMPT = `You are an Intent Extraction Agent for a Pakistani home services app.
 Extract the user's request and return ONLY raw JSON with NO markdown, NO backticks:
 {
-  "service_type": "one of: AC repair / Plumbing / Electrical / Carpentry / Painting / Cleaning / Gas / CCTV / Other",
+  "service_type": "one of: AC repair / Plumbing / Electrical / Carpentry / Painting / Cleaning / Gas / CCTV / Tutor / Beautician / Other",
   "location": "exact area/city name from input, e.g. G-13, DHA Phase 5, Lahore",
   "time_preference": "today / tomorrow morning / tomorrow afternoon / this week / urgent / flexible",
   "urgency": "same_day OR next_day",
