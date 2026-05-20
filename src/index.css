@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #ff5500;
+  --color-primary-light: #ff8533;
+  --color-primary-lighter: #ffb380;
+  --color-primary-glow: rgba(255, 85, 0, 0.25);
+  --animate-blob: blob 10s infinite ease-in-out;
+  --animate-morph: morph 12s infinite ease-in-out;
+  --animate-spark: spark-rise 2.5s infinite ease-out;
+}
+
+/* ─── Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  background-color: #fdf6ee;
+  color: #1a0f00;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ffd5b0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #ffb380; }
+
+/* ─── Blob / Morph Keyframes ─────────────────────── */
+@keyframes blob {
+  0%   { transform: translate(0px, 0px) scale(1);          border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25%  { transform: translate(25px, -40px) scale(1.08);    border-radius: 30% 60% 70% 40% / 50% 60% 30% 70%; }
+  50%  { transform: translate(-15px, 20px) scale(0.95);    border-radius: 50% 50% 30% 70% / 40% 60% 50% 60%; }
+  75%  { transform: translate(20px, 30px) scale(1.05);     border-radius: 40% 60% 60% 40% / 60% 30% 60% 40%; }
+  100% { transform: translate(0px, 0px) scale(1);          border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+@keyframes morph {
+  0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  33%      { border-radius: 30% 60% 70% 40% / 50% 60% 30% 70%; }
+  66%      { border-radius: 50% 50% 30% 70% / 40% 60% 50% 60%; }
+}
+
+/* ─── Spark Particles ────────────────────────────── */
+@keyframes spark-rise {
+  0%   { transform: translateY(0) scale(1); opacity: 0.9; }
+  60%  { opacity: 0.6; }
+  100% { transform: translateY(-80px) scale(0.4); opacity: 0; }
+}
+
+.spark-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+.spark {
+  position: absolute;
+  bottom: -5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff8533;
+  animation: spark-rise 2.5s infinite ease-out;
+}
+.spark:nth-child(1)  { left: 15%; animation-delay: 0s;    background: #ff5500; }
+.spark:nth-child(2)  { left: 32%; animation-delay: 0.5s;  background: #ffb380; width:3px; height:3px; }
+.spark:nth-child(3)  { left: 55%; animation-delay: 1s;    background: #ff8533; }
+.spark:nth-child(4)  { left: 72%; animation-delay: 1.5s;  background: #ffa64d; width:3px; height:3px; }
+.spark:nth-child(5)  { left: 88%; animation-delay: 2s;    background: #ff5500; width:5px; height:5px; }
+
+/* ─── Animation Delay Helpers ─────────────────────── */
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+.animation-delay-6000 { animation-delay: 6s; }
+
+/* ─── Entrance Animations ─────────────────────────── */
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(22px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  0%   { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both !important; }
+.animate-scale-in   { animation: scaleIn  0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both !important; }
+
+/* Staggered delays */
+.delay-100 { animation-delay: 100ms !important; }
+.delay-200 { animation-delay: 200ms !important; }
+.delay-300 { animation-delay: 300ms !important; }
+.delay-400 { animation-delay: 400ms !important; }
+.delay-500 { animation-delay: 500ms !important; }
+
+/* ─── Shimmer Sweep ───────────────────────────────── */
+@keyframes textShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.animate-shimmer-sweep {
+  background: linear-gradient(120deg, #ff5500 20%, #ff8533 38%, #fff7f0 50%, #ff8533 62%, #ff5500 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 3s linear infinite;
+}
+
+/* ─── Button Shimmer Sweep ────────────────────────── */
+@keyframes btnShimmer {
+  0%   { left: -100%; }
+  60%  { left: 120%; }
+  100% { left: 120%; }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; height: 100%; width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  transform: skewX(-20deg);
+  animation: btnShimmer 2.8s ease-in-out infinite;
+}
+
+/* ─── Bolt Pulse ─────────────────────────────────── */
+@keyframes boltPulse {
+  0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 4px #ff5500); }
+  50%       { transform: scale(1.18); filter: drop-shadow(0 0 10px #ff8533); }
+}
+.animate-bolt-pulse { animation: boltPulse 1.4s ease-in-out infinite; }
+
+/* ─── Pulsing badge dot ───────────────────────────── */
+@keyframes badgePing {
+  0%   { transform: scale(1);   opacity: 1; }
+  75%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.badge-ping { animation: badgePing 1.5s cubic-bezier(0,0,0.2,1) infinite; }
+
+/* ─── Gradient mesh breathe ──────────────────────── */
+@keyframes meshBreathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 0.80; transform: scale(1.04); }
+}
+.animate-breathe { animation: meshBreathe 6s ease-in-out infinite; }
+
+/* ─── Chip / Pill hover lift ─────────────────────── */
+.chip {
+  background: #fff;
+  border: 1.5px solid #ffd5b0;
+  color: #cc5500;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: #ff8533;
+  box-shadow: 0 4px 14px rgba(255, 85, 0, 0.18);
+}
+
+/* ─── Card base ──────────────────────────────────── */
+.warm-card {
+  background: #ffffff;
+  border: 1.5px solid #ffe5cc;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(255, 85, 0, 0.06);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.warm-card:focus-within {
+  border-color: #ff9966;
+  box-shadow: 0 4px 28px rgba(255, 85, 0, 0.14);
+}
+
+/* ─── Textarea / Input focus ─────────────────────── */
+textarea:focus, input:focus {
+  outline: none;
+  border-color: #ff9966 !important;
+}
+
+/* ─── Utility overrides ──────────────────────────── */
+.bg-primary { background: linear-gradient(135deg, #ff5500, #ff8533); }
+.text-primary { color: #ff5500; }
+.border-primary { border-color: #ff9966; }
