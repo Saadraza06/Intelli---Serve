@@ -41,7 +41,7 @@ export default function FollowUp() {
   };
 
   return (
-    <div className="flex flex-col h-full relative pb-20" style={{ background: 'transparent' }}>
+    <div className="flex flex-col min-h-full relative pb-20" style={{ background: 'transparent' }}>
       {/* Header */}
       <div className="p-4 shrink-0 flex justify-between items-center" style={{ borderBottom: '1.5px solid #ffe5cc' }}>
         <h2 className="text-xl" style={{ fontWeight: 800, color: '#1a0f00' }}>Service Tracking</h2>
@@ -54,7 +54,7 @@ export default function FollowUp() {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5">
+      <div className="flex-1 p-5">
 
         {/* Timeline */}
         <div className="mb-7 relative">

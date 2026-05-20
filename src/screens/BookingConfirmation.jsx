@@ -57,7 +57,7 @@ export default function BookingConfirmation() {
 
 
   if (isBooking) return (
-    <div className="flex flex-col items-center justify-center h-full p-6 space-y-6" style={{ background: 'transparent' }}>
+    <div className="flex flex-col items-center justify-center min-h-full p-6 space-y-6" style={{ background: 'transparent' }}>
       <div className="relative w-16 h-16">
         <div className="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin" style={{ borderColor: '#ff8533', borderTopColor: 'transparent' }} />
         <div className="absolute inset-2 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#ff5500,#ff8533)' }}>
@@ -72,7 +72,7 @@ export default function BookingConfirmation() {
   );
 
   if (conflict) return (
-    <div className="flex flex-col items-center justify-center h-full p-6 space-y-6 text-center" style={{ background: 'transparent' }}>
+    <div className="flex flex-col items-center justify-center min-h-full p-6 space-y-6 text-center" style={{ background: 'transparent' }}>
       <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'rgba(217,119,6,0.12)', border: '2px solid rgba(217,119,6,0.30)' }}>
         <Calendar size={32} style={{ color: '#d97706' }} />
       </div>
@@ -87,8 +87,8 @@ export default function BookingConfirmation() {
   if (!booking) return null;
 
   return (
-    <div className="flex flex-col h-full relative" style={{ background: 'transparent' }}>
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex flex-col min-h-full relative" style={{ background: 'transparent' }}>
+      <div className="flex-1">
 
         {/* Success header */}
         <div className="p-6 pb-10 rounded-b-[40px] flex flex-col items-center text-center"

@@ -16,7 +16,7 @@ export default function AgentTrace() {
   const totalTime = logs.reduce((sum, log) => sum + (log.executionTime || 0), 0);
 
   return (
-    <div className="flex flex-col h-full relative pb-20" style={{ background: 'transparent', fontFamily: 'inherit' }}>
+    <div className="flex flex-col min-h-full relative pb-20" style={{ background: 'transparent', fontFamily: 'inherit' }}>
       {/* Header */}
       <div className="p-4 shrink-0 flex items-center justify-between" style={{ borderBottom: '1.5px solid #ffe5cc' }}>
         <div className="flex items-center">
@@ -32,7 +32,7 @@ export default function AgentTrace() {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 p-4 space-y-5">
         {logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-52 animate-fade-in-up">
             <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4"

@@ -234,7 +234,7 @@ IMPORTANT RULES:
     : { background: 'rgba(192,144,112,0.10)', border: '1.5px solid #ffd5b0', color: '#c09070' };
 
   return (
-    <div className="flex flex-col h-full relative" style={{ background: 'transparent' }}>
+    <div className="flex flex-col min-h-full relative" style={{ background: 'transparent' }}>
       {/* Spark particles decorative */}
       <div className="spark-container" aria-hidden="true">
         <div className="spark" />
@@ -244,7 +244,7 @@ IMPORTANT RULES:
         <div className="spark" />
       </div>
 
-      <div className="p-5 flex-1 overflow-y-auto pb-6 flex flex-col">
+      <div className="p-5 flex-1 pb-6 flex flex-col">
 
 
 

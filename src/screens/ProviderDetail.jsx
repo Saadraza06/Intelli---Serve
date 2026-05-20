@@ -31,8 +31,8 @@ export default function ProviderDetail() {
   if (!provider) return null;
 
   return (
-    <div className="flex flex-col h-full relative" style={{ background: 'transparent' }}>
-      <div className="flex-1 overflow-y-auto pb-32">
+    <div className="flex flex-col min-h-full relative" style={{ background: 'transparent' }}>
+      <div className="flex-1 pb-32">
         <div className="p-5 pb-4">
           <div className="warm-card p-5">
             <div className="flex items-center space-x-4 mb-4">

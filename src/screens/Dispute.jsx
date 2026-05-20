@@ -32,7 +32,7 @@ export default function Dispute() {
   };
 
   return (
-    <div className="flex flex-col h-full relative pb-20" style={{ background: 'transparent' }}>
+    <div className="flex flex-col min-h-full relative pb-20" style={{ background: 'transparent' }}>
       {/* Header */}
       <div className="p-4 shrink-0 flex items-center" style={{ borderBottom: '1.5px solid #ffe5cc' }}>
         <AlertOctagon size={22} className="mr-2" style={{ color: '#dc2626' }} />
@@ -54,7 +54,7 @@ export default function Dispute() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-5">
+      <div className="flex-1 p-5">
         {activeTab === 'cancel' && (
           <div className="mb-5">
             <h3 className="text-lg mb-2" style={{ fontWeight: 800, color: '#1a0f00' }}>Cancel Booking</h3>

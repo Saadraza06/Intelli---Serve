@@ -56,7 +56,7 @@ export default function ProviderList() {
   }
 
   return (
-    <div className="flex flex-col h-full relative pb-20" style={{ background: 'transparent' }}>
+    <div className="flex flex-col min-h-full relative pb-20" style={{ background: 'transparent' }}>
       {/* Header */}
       <div className="p-4 pb-2 shrink-0">
         <h2 className="text-xl font-800" style={{ fontWeight: 800, color: '#1a0f00' }}>
@@ -73,7 +73,7 @@ export default function ProviderList() {
       </div>
 
       {/* Provider cards list */}
-      <div className="flex-1 overflow-y-auto px-4 pt-2 space-y-4 pb-6">
+      <div className="flex-1 px-4 pt-2 space-y-4 pb-6">
         {providers.map((p, index) => (
           <ProviderCard key={p.id} provider={p} rank={index + 1} intentData={intentData} />
         ))}

@@ -23,14 +23,14 @@ export default function BaselineCompare() {
   const [ranDemo, setRanDemo] = useState(false);
 
   return (
-    <div className="flex flex-col h-full relative pb-20" style={{ background: 'transparent' }}>
+    <div className="flex flex-col min-h-full relative pb-20" style={{ background: 'transparent' }}>
       {/* Header */}
       <div className="p-4 shrink-0 flex items-center" style={{ borderBottom: '1.5px solid #ffe5cc' }}>
         <Layers size={20} className="mr-2" style={{ color: '#ff5500' }} />
         <h2 className="text-xl" style={{ fontWeight: 800, color: '#1a0f00' }}>System Compare</h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 p-4 space-y-5">
 
         {/* Score cards */}
         <div className="grid grid-cols-2 gap-4">
