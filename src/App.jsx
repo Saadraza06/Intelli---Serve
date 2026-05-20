@@ -100,6 +100,42 @@ export default function App() {
     };
   }, [location.pathname, updateScrollInfo]);
 
+  // Programmatic mobile pull-to-refresh prevention
+  React.useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    let touchStartY = 0;
+
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches.length !== 1) return;
+
+      const touchY = e.touches[0].clientY;
+      const touchDeltaY = touchY - touchStartY;
+
+      // If the viewport is scrolled to the absolute top, and the user pulls down, block it.
+      if (main.scrollTop <= 0 && touchDeltaY > 0) {
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      }
+    };
+
+    main.addEventListener('touchstart', handleTouchStart, { passive: true });
+    main.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      main.removeEventListener('touchstart', handleTouchStart);
+      main.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
+
   // Window drag listeners
   const dragStartRef = React.useRef({ startY: 0, startScrollTop: 0 });
 
