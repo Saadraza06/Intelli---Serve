@@ -18,15 +18,29 @@ export const haversineDistance = (lat1, lng1, lat2, lng2) => {
 
 // --- Step 1: Geocode location text with smart variants + Nominatim Fallback ---
 export const geocodeLocation = async (locationText) => {
-  const isNumeric = /^\d{1,2}$/.test(locationText.trim());
-  const variants = isNumeric
-    ? [
-        `G-${locationText} Islamabad, Pakistan`,
-        `F-${locationText} Islamabad, Pakistan`,
-        `I-${locationText} Islamabad, Pakistan`,
-        `Sector ${locationText} Islamabad, Pakistan`,
-      ]
-    : [`${locationText}, Pakistan`];
+  const trimmed = locationText.trim();
+  const sectorMatch = trimmed.match(/^([A-Za-z])[\s-]?(\d{1,2})$/);
+  
+  let variants = [];
+  if (sectorMatch) {
+    const letter = sectorMatch[1].toUpperCase();
+    const num = sectorMatch[2];
+    variants = [
+      `${letter}-${num} Islamabad, Pakistan`,
+      `${letter}${num} Islamabad, Pakistan`,
+      `Sector ${letter}-${num} Islamabad, Pakistan`,
+      `${trimmed}, Pakistan`
+    ];
+  } else if (/^\d{1,2}$/.test(trimmed)) {
+    variants = [
+      `G-${trimmed} Islamabad, Pakistan`,
+      `F-${trimmed} Islamabad, Pakistan`,
+      `I-${trimmed} Islamabad, Pakistan`,
+      `Sector ${trimmed} Islamabad, Pakistan`,
+    ];
+  } else {
+    variants = [`${trimmed}, Pakistan`];
+  }
 
   const mapsApiKey = getMapsApiKey();
   for (const query of variants) {
