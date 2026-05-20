@@ -1,4 +1,6 @@
-const MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+const getMapsApiKey = () => {
+  return localStorage.getItem('VITE_GOOGLE_MAPS_API_KEY') || import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
+};
 
 // ─── Haversine Formula: km distance between two lat/lng points ────────────────
 export const haversineDistance = (lat1, lng1, lat2, lng2) => {
@@ -26,9 +28,10 @@ export const geocodeLocation = async (locationText) => {
       ]
     : [`${locationText}, Pakistan`];
 
+  const mapsApiKey = getMapsApiKey();
   for (const query of variants) {
     try {
-      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(query)}&key=${MAPS_API_KEY}`;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(query)}&key=${mapsApiKey}`;
       const res = await fetch(url);
       const data = await res.json();
       if (data.status === 'OK' && data.results.length > 0) {

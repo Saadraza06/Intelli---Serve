@@ -2,16 +2,22 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { geocodeLocation, searchNearbyProviders } from "./googleMapsService";
 import { mockProviders } from "../data/mockProviders";
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(API_KEY);
+const getGeminiApiKey = () => {
+  return localStorage.getItem('VITE_GEMINI_API_KEY') || import.meta.env.VITE_GEMINI_API_KEY || '';
+};
 
-const getModel = (systemInstruction) => genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
-  ...(systemInstruction ? { systemInstruction: { parts: [{ text: systemInstruction }] } } : {})
-});
+const getModel = (systemInstruction) => {
+  const activeKey = getGeminiApiKey();
+  const genAI = new GoogleGenerativeAI(activeKey);
+  return genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    ...(systemInstruction ? { systemInstruction: { parts: [{ text: systemInstruction }] } } : {})
+  });
+};
 
 export const callGeminiAPI = async (systemInstruction, userPrompt, useJSON = true) => {
-  const cleanKey = API_KEY?.trim();
+  const activeKey = getGeminiApiKey();
+  const cleanKey = activeKey?.trim();
   if (!cleanKey || cleanKey === 'your_api_key_here') {
     return generateMockResponse(systemInstruction, userPrompt);
   }
@@ -124,7 +130,7 @@ YOUR JOB:
 
 export const runAgenticLoop = async (systemInstruction, userPrompt, onUpdate) => {
   console.log("Starting 3-Stage Real-Time Pipeline...");
-  const cleanKey = API_KEY?.trim();
+  const cleanKey = getGeminiApiKey()?.trim();
 
   if (!cleanKey || cleanKey === 'your_api_key_here') {
     return simulateAgenticLoop(systemInstruction, userPrompt, onUpdate);
@@ -333,12 +339,29 @@ const simulateAgenticLoop = async (systemInstruction, userPrompt, onUpdate) => {
   if (onUpdate) onUpdate("Discovery Agent: Generating providers...");
   await new Promise(r => setTimeout(r, 800));
 
-  const serviceMatch = userPrompt.match(/(ac technician|ac repair|plumber|electrician|carpenter|painter|bijli|nal)/i);
+  const promptLower = userPrompt.toLowerCase();
+  
+  // Extract service type
+  const serviceMatch = promptLower.match(/(ac technician|ac repair|plumber|electrician|carpenter|painter|bijli|nal)/i);
   const service = serviceMatch ? serviceMatch[1] : "General Service";
 
-  // Extract location from prompt
-  const locMatch = userPrompt.match(/(?:in|at|mein|near)\s+([A-Za-z0-9\-]+)/i);
-  const location = locMatch ? locMatch[1] : "Islamabad";
+  // Extract location from prompt (smart extraction supporting "Location mein/me" and "in/at/near Location")
+  let location = "Islamabad";
+  const meinMatch = promptLower.match(/(\w+)\s+(?:mein|ma|me)/i);
+  const inMatch = promptLower.match(/(?:in|at|near)\s+(\w+)/i);
+  if (meinMatch) {
+    location = meinMatch[1];
+  } else if (inMatch) {
+    location = inMatch[1];
+  } else {
+    // Fallback: search for last word that is not a stop word
+    const words = promptLower.trim().split(/\s+/);
+    const lastWord = words[words.length - 1];
+    const STOP_WORDS = new Set(['chahiye', 'hai', 'ka', 'ki', 'ko', 'se', 'urgent', 'kal', 'aaj']);
+    if (lastWord && !STOP_WORDS.has(lastWord)) {
+      location = lastWord;
+    }
+  }
   const area = location.charAt(0).toUpperCase() + location.slice(1);
 
   if (onUpdate) onUpdate("Ranking Agent: Calculating scores...");

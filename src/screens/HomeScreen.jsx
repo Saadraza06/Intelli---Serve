@@ -16,8 +16,14 @@ export default function HomeScreen() {
   const [detectedLang, setDetectedLang] = useState({ lang: 'Typing...', confidence: 0 });
   const [isProcessing, setIsProcessing] = useState(false);
   const [agentStatus, setAgentStatus] = useState('');
-  const { setIntentData, addLog, stressTest, setStressTest } = useIntent();
+  const { setIntentData, addLog, stressTest, setStressTest, setIsSettingsOpen, apiKeyVersion } = useIntent();
   const navigate = useNavigate();
+
+  const [hasGeminiKey, setHasGeminiKey] = useState(false);
+
+  useEffect(() => {
+    setHasGeminiKey(!!localStorage.getItem('VITE_GEMINI_API_KEY'));
+  }, [apiKeyVersion]);
 
   useEffect(() => {
     if (!input.trim()) { setDetectedLang({ lang: 'Waiting...', confidence: 0 }); return; }
@@ -239,6 +245,66 @@ IMPORTANT RULES:
       </div>
 
       <div className="p-5 flex-1 overflow-y-auto pb-6 flex flex-col">
+
+        {/* ── Premium Mode Alert Banner ── */}
+        {!hasGeminiKey ? (
+          <div
+            onClick={() => setIsSettingsOpen(true)}
+            className="mb-5 p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-98 animate-fade-in-up delay-100 shadow-sm"
+            style={{
+              background: 'rgba(255, 85, 0, 0.04)',
+              borderColor: 'rgba(255, 85, 0, 0.18)',
+            }}
+          >
+            <div className="flex items-center space-x-3">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ background: 'rgba(255, 85, 0, 0.08)' }}
+              >
+                <Zap size={14} className="text-[#ff5500] animate-bolt-pulse" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-xs font-800 text-[#1a0f00]" style={{ fontWeight: 800 }}>
+                  Demo Mode (Simulated Results)
+                </span>
+                <span className="text-[10px] font-500 text-[#c09070] mt-0.5 leading-snug">
+                  Providing your Gemini Key enables live Pakistan searches! Tap here.
+                </span>
+              </div>
+            </div>
+            <div className="text-[#ff5500] text-[10px] font-800 tracking-wider shrink-0 uppercase border border-orange-100 px-2 py-1 rounded-lg bg-white shadow-xs">
+              Configure
+            </div>
+          </div>
+        ) : (
+          <div
+            onClick={() => setIsSettingsOpen(true)}
+            className="mb-5 p-3.5 rounded-2xl border flex items-center justify-between gap-3 cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-98 animate-fade-in-up delay-100 shadow-sm"
+            style={{
+              background: 'rgba(16, 185, 129, 0.04)',
+              borderColor: 'rgba(16, 185, 129, 0.18)',
+            }}
+          >
+            <div className="flex items-center space-x-3">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-emerald-50"
+              >
+                <Globe size={14} className="text-emerald-500 animate-pulse" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-xs font-800 text-[#1a0f00]" style={{ fontWeight: 800 }}>
+                  Live Mode Enabled 🟢
+                </span>
+                <span className="text-[10px] font-500 text-[#c09070] mt-0.5 leading-snug">
+                  Querying live Google Maps place databases in real-time.
+                </span>
+              </div>
+            </div>
+            <div className="text-emerald-600 text-[10px] font-800 tracking-wider shrink-0 uppercase border border-emerald-100 px-2 py-1 rounded-lg bg-white shadow-xs">
+              Live
+            </div>
+          </div>
+        )}
 
         {/* ── Hero headline ── */}
         <div className="shrink-0 flex flex-col items-center justify-center mb-7 animate-fade-in-up delay-100 text-center">

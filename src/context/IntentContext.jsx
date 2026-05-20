@@ -11,6 +11,8 @@ export const IntentProvider = ({ children }) => {
   const [stressTest, setStressTest] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [selectedProvider, setSelectedProvider] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [apiKeyVersion, setApiKeyVersion] = useState(0);
 
   React.useEffect(() => {
     if (darkMode) {
@@ -35,6 +37,10 @@ export const IntentProvider = ({ children }) => {
     setDarkMode,
     selectedProvider,
     setSelectedProvider,
+    isSettingsOpen,
+    setIsSettingsOpen,
+    apiKeyVersion,
+    triggerApiKeyUpdate: () => setApiKeyVersion(prev => prev + 1),
   };
 
   return <IntentContext.Provider value={value}>{children}</IntentContext.Provider>;

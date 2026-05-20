@@ -85,4 +85,3 @@ IntelliServe is containerized for simple one-command deployments (fully compatib
 - **Geocoding**: Google Geocoding API & OpenStreetMap Nominatim
 - **Real-World Discovery**: Google Places SDK (New)
 - **Deployment**: multi-stage Docker / Nginx SPA configuration
-- .
