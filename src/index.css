@@ -204,3 +204,12 @@ textarea:focus, input:focus {
 .bg-primary { background: linear-gradient(135deg, #ff5500, #ff8533); }
 .text-primary { color: #ff5500; }
 .border-primary { border-color: #ff9966; }
+
+/* Hide default browser scrollbars while keeping full scroll capability */
+.hide-default-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-default-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

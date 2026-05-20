@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Home, List, FileText, Layers, ActivitySquare, Zap, Activity, Settings, X, Key, Eye, EyeOff, Check, Trash2, AlertCircle, ExternalLink, Globe } from 'lucide-react';
+import { Home, List, FileText, Layers, ActivitySquare, Zap, Activity, Settings, X, Key, Eye, EyeOff, Check, Trash2, AlertCircle, ExternalLink, Globe, ChevronUp, ChevronDown } from 'lucide-react';
 import { useIntent } from './context/IntentContext';
 import HomeScreen from './screens/HomeScreen.jsx';
 import ProviderList from './screens/ProviderList.jsx';
@@ -50,6 +50,164 @@ export default function App() {
       triggerApiKeyUpdate();
     }
   }, []);
+
+  // ─── Scroll tracking & custom slider hooks ───
+  const mainRef = React.useRef(null);
+  const [scrollState, setScrollState] = React.useState({
+    scrollTop: 0,
+    scrollHeight: 0,
+    clientHeight: 0,
+  });
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  const updateScrollInfo = React.useCallback(() => {
+    const main = mainRef.current;
+    if (main) {
+      setScrollState({
+        scrollTop: main.scrollTop,
+        scrollHeight: main.scrollHeight,
+        clientHeight: main.clientHeight,
+      });
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (!isDragging) {
+      updateScrollInfo();
+    }
+  };
+
+  // Recalculate scroll dimensions when route changes or DOM size shifts
+  React.useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    updateScrollInfo();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateScrollInfo();
+    });
+    resizeObserver.observe(main);
+
+    // Also observe the children inside the viewport
+    const children = main.children;
+    for (let i = 0; i < children.length; i++) {
+      resizeObserver.observe(children[i]);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [location.pathname, updateScrollInfo]);
+
+  // Window drag listeners
+  const dragStartRef = React.useRef({ startY: 0, startScrollTop: 0 });
+
+  const handleDragStart = (e) => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    if (clientY === undefined) return;
+
+    setIsDragging(true);
+    dragStartRef.current = {
+      startY: clientY,
+      startScrollTop: main.scrollTop,
+    };
+    e.preventDefault();
+  };
+
+  React.useEffect(() => {
+    if (!isDragging) return;
+
+    const handleDragMove = (e) => {
+      const main = mainRef.current;
+      if (!main) return;
+
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      if (clientY === undefined) return;
+
+      const deltaY = clientY - dragStartRef.current.startY;
+      const maxScroll = scrollState.scrollHeight - scrollState.clientHeight;
+      if (maxScroll <= 0) return;
+
+      const trackHeight = scrollState.clientHeight;
+      const thumbHeight = Math.max(40, (scrollState.clientHeight / scrollState.scrollHeight) * trackHeight);
+      const scrollableTrackHeight = trackHeight - thumbHeight;
+
+      if (scrollableTrackHeight <= 0) return;
+
+      const scrollDelta = (deltaY / scrollableTrackHeight) * maxScroll;
+      let newScrollTop = dragStartRef.current.startScrollTop + scrollDelta;
+      newScrollTop = Math.max(0, Math.min(newScrollTop, maxScroll));
+
+      main.scrollTop = newScrollTop;
+      setScrollState((prev) => ({ ...prev, scrollTop: newScrollTop }));
+    };
+
+    const handleDragEnd = () => {
+      setIsDragging(false);
+    };
+
+    window.addEventListener('mousemove', handleDragMove, { passive: false });
+    window.addEventListener('mouseup', handleDragEnd);
+    window.addEventListener('touchmove', handleDragMove, { passive: false });
+    window.addEventListener('touchend', handleDragEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleDragMove);
+      window.removeEventListener('mouseup', handleDragEnd);
+      window.removeEventListener('touchmove', handleDragMove);
+      window.removeEventListener('touchend', handleDragEnd);
+    };
+  }, [isDragging, scrollState.scrollHeight, scrollState.clientHeight]);
+
+  const handleTrackClick = (e) => {
+    if (e.target.id === 'custom-scrollbar-track') {
+      const main = mainRef.current;
+      if (!main) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickY = e.clientY - rect.top;
+
+      const maxScroll = scrollState.scrollHeight - scrollState.clientHeight;
+      const trackHeight = scrollState.clientHeight;
+      const thumbHeight = Math.max(40, (scrollState.clientHeight / scrollState.scrollHeight) * trackHeight);
+
+      const relativePos = (clickY - thumbHeight / 2) / (trackHeight - thumbHeight);
+      let newScrollTop = relativePos * maxScroll;
+      newScrollTop = Math.max(0, Math.min(newScrollTop, maxScroll));
+
+      main.scrollTo({ top: newScrollTop, behavior: 'smooth' });
+    }
+  };
+
+  const scrollUp = (e) => {
+    e.stopPropagation();
+    const main = mainRef.current;
+    if (main) {
+      main.scrollBy({ top: -220, behavior: 'smooth' });
+    }
+  };
+
+  const scrollDown = (e) => {
+    e.stopPropagation();
+    const main = mainRef.current;
+    if (main) {
+      main.scrollBy({ top: 220, behavior: 'smooth' });
+    }
+  };
+
+  const maxScroll = scrollState.scrollHeight - scrollState.clientHeight;
+  const isScrollable = maxScroll > 0;
+  const trackHeight = scrollState.clientHeight;
+  const thumbHeight = isScrollable
+    ? Math.max(40, Math.min(trackHeight * 0.4, (scrollState.clientHeight / scrollState.scrollHeight) * trackHeight))
+    : 0;
+  const thumbTop = isScrollable
+    ? (scrollState.scrollTop / maxScroll) * (trackHeight - thumbHeight)
+    : 0;
 
   const navItems = [
     { path: '/',         icon: <Home size={22} />,           label: 'Home'     },
@@ -178,18 +336,69 @@ export default function App() {
         </header>
 
         {/* ── Main content ── */}
-        <main className="flex-1 overflow-y-auto w-full relative">
-          <Routes>
-            <Route path="/"             element={<HomeScreen />}          />
-            <Route path="/providers"    element={<ProviderList />}        />
-            <Route path="/provider/:id" element={<ProviderDetail />}      />
-            <Route path="/booking"      element={<BookingConfirmation />} />
-            <Route path="/followup"     element={<FollowUp />}            />
-            <Route path="/dispute"      element={<Dispute />}             />
-            <Route path="/compare"      element={<BaselineCompare />}     />
-            <Route path="/trace"        element={<AgentTrace />}          />
-          </Routes>
-        </main>
+        <div className="flex-1 w-full relative overflow-hidden">
+          <main
+            ref={mainRef}
+            onScroll={handleScroll}
+            className="w-full h-full overflow-y-auto hide-default-scrollbar relative"
+          >
+            <Routes>
+              <Route path="/"             element={<HomeScreen />}          />
+              <Route path="/providers"    element={<ProviderList />}        />
+              <Route path="/provider/:id" element={<ProviderDetail />}      />
+              <Route path="/booking"      element={<BookingConfirmation />} />
+              <Route path="/followup"     element={<FollowUp />}            />
+              <Route path="/dispute"      element={<Dispute />}             />
+              <Route path="/compare"      element={<BaselineCompare />}     />
+              <Route path="/trace"        element={<AgentTrace />}          />
+            </Routes>
+          </main>
+
+          {/* ── Custom interactive page scroll slider overlay ── */}
+          {isScrollable && (
+            <div
+              className="absolute right-2 top-4 bottom-4 w-6 z-30 flex flex-col items-center justify-between pointer-events-none transition-all duration-300 animate-scale-in"
+            >
+              {/* Up scroll button */}
+              <button
+                onClick={scrollUp}
+                className="w-6 h-6 rounded-full bg-white/90 hover:bg-white border border-[#ffe5cc] flex items-center justify-center pointer-events-auto cursor-pointer hover:scale-110 active:scale-95 transition-all text-[#ff5500] shadow-[0_2px_8px_rgba(255,85,0,0.12)] shrink-0"
+                title="Scroll Up"
+              >
+                <ChevronUp size={14} strokeWidth={3} />
+              </button>
+
+              {/* Scroll Track wrapper */}
+              <div
+                id="custom-scrollbar-track"
+                onClick={handleTrackClick}
+                className="w-2.5 flex-1 my-2 bg-black/5 hover:bg-black/8 rounded-full relative pointer-events-auto cursor-pointer border border-white/40 backdrop-blur-[2px] transition-colors"
+                title="Click to jump scroll"
+              >
+                {/* Scroll Thumb Slider */}
+                <div
+                  onMouseDown={handleDragStart}
+                  onTouchStart={handleDragStart}
+                  className="w-full bg-gradient-to-b from-[#ff8533] to-[#ff5500] rounded-full absolute shadow-[0_3px_10px_rgba(255,85,0,0.4)] hover:scale-x-125 transition-transform cursor-grab active:cursor-grabbing"
+                  style={{
+                    height: `${thumbHeight}px`,
+                    top: `${thumbTop}px`,
+                    border: '1px solid rgba(255,255,255,0.4)',
+                  }}
+                />
+              </div>
+
+              {/* Down scroll button */}
+              <button
+                onClick={scrollDown}
+                className="w-6 h-6 rounded-full bg-white/90 hover:bg-white border border-[#ffe5cc] flex items-center justify-center pointer-events-auto cursor-pointer hover:scale-110 active:scale-95 transition-all text-[#ff5500] shadow-[0_2px_8px_rgba(255,85,0,0.12)] shrink-0"
+                title="Scroll Down"
+              >
+                <ChevronDown size={14} strokeWidth={3} />
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* ── Bottom nav ── */}
         <nav
