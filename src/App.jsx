@@ -32,17 +32,17 @@ export default function App() {
     }
   }, [isSettingsOpen, apiKeyVersion]);
 
-  // Pre-populate default keys into localStorage if none exist to enable Live Mode by default
+  // Pre-populate default keys into localStorage if none exist or if they are placeholder keys
   React.useEffect(() => {
     const currentGemini = localStorage.getItem('VITE_GEMINI_API_KEY');
     const currentMaps = localStorage.getItem('VITE_GOOGLE_MAPS_API_KEY');
     
     let updated = false;
-    if (!currentGemini) {
+    if (!currentGemini || currentGemini.trim() === '' || currentGemini.trim() === 'your_api_key_here') {
       localStorage.setItem('VITE_GEMINI_API_KEY', 'AIzaSyAZMlEO--a7roKHthOEt7xH-1V6RwsX6FY');
       updated = true;
     }
-    if (!currentMaps) {
+    if (!currentMaps || currentMaps.trim() === '' || currentMaps.trim() === 'your_api_key_here') {
       localStorage.setItem('VITE_GOOGLE_MAPS_API_KEY', 'AIzaSyDmVrL7oRkUZB2qb2s_Oxu2g8CnsVWzT7E');
       updated = true;
     }
