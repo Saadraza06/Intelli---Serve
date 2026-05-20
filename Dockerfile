@@ -1,5 +1,4 @@
-FROM node:20 as build
-
+FROM node:22 as build
 # Increase Node.js heap memory limit for resource-intensive Vite/Tailwind v4 builds
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
