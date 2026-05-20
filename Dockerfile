@@ -12,8 +12,11 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy the rest of the application code
-COPY . .
+# Copy only the application source and configuration files
+# This prevents copying local node_modules or env files even if .dockerignore is missing
+COPY vite.config.js index.html ./
+COPY src ./src
+COPY public ./public
 
 # Build the app for production
 # Note: Vite embeds environment variables prefixed with VITE_ at build time.
